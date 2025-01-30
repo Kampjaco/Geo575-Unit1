@@ -1,75 +1,75 @@
-var cityPop = [
-	{ 
-		city: 'Madison',
-		population: 233209
-	},
-	{
-		city: 'Milwaukee',
-		population: 594833
-	},
-	{
-		city: 'Green Bay',
-		population: 104057
-	},
-	{
-		city: 'Superior',
-		population: 27244
-	}
-];
+function initialize() {
+    cities(); // Call cities() to create and append the table
+}
 
-function addColumns(cityPop){
-    
-    document.querySelectorAll("tr").forEach(function(row, i){
+function cities() {
 
-    	if (i == 0){
+	//Array with cities and their respective populations
+    var cityPop = [
+        { city: 'Madison', population: 233209 },
+        { city: 'Milwaukee', population: 594833 },
+        { city: 'Green Bay', population: 104057 },
+        { city: 'Superior', population: 27244 }
+    ];
 
-    		row.insertAdjacentHTML('beforeend', '<th>City Size</th>');
-    	} else {
+    // Create the table
+    var table = document.createElement("table");
 
-    		var citySize;
+    // Create header row and add to table
+    var headerRow = document.createElement("tr");
+    headerRow.innerHTML = "<th>City</th><th>Population</th><th>City Size</th>";
+    table.appendChild(headerRow);
 
-    		if (cityPop[i-1].population < 100000){
-    			citySize = 'Small';
+    // Create table rows
+    cityPop.forEach(city => {
+        var row = document.createElement("tr");
+        
+        // Determine city size
+        let citySize;
+        if (city.population < 100000) {
+            citySize = 'Small';
+        } else if (city.population < 500000) {
+            citySize = 'Medium';
+        } else {
+            citySize = 'Large';
+        }
 
-    		} else if (cityPop[i-1].population < 500000){
-    			citysize = 'Medium';
-
-    		} else {
-    			citySize = 'Large';
-    		};
-
-			row.insertAdjacentHTML = '<td' + citySize + '</td>';
-    	};
+        // Add table data
+        row.innerHTML = `<td>${city.city}</td><td>${city.population}</td><td>${citySize}</td>`;
+        table.appendChild(row);
     });
-};
 
-function addEvents(){
+    // Append the table to the body
+    document.body.appendChild(table);
 
-	document.querySelector("table").addEventListener("mouseover", function(){
-		
-		var color = "rgb(";
+	// Call addEvents after the table is added to the DOM
+    addEvents(); 
+}
 
-		for (var i=0; i<3; i++){
+//Adds mouse hover and click functionality to the table
+function addEvents() {
 
-			var random = Math.round(Math.random() * 255);
+	//Selects table from DOM
+    let table = document.querySelector("table");
 
-			color += "random";
+	//Changes the color of the text of the table whenever a mouse is hovered over a new table entry
+    table.addEventListener("mouseover", function () {
+        let color = "rgb(";
+        for (let i = 0; i < 3; i++) {
+            let random = Math.round(Math.random() * 255);
+            color += random + (i < 2 ? "," : ")");
+        }
+		//Color changes on a randomly generated rgb value, like (210,45,67)
+        table.style.color = color;
+    });
 
-			if (i<2){
-				color += ",";
-			
-			} else {
-				color += ")";
-			}
-		};
+	//Creates an alert when the table is clicked
+    function clickme() {
+        alert('Hey, you clicked me!');
+    }
 
-		document.querySelector("table").color = color;
-	});
+    table.addEventListener("click", clickme);
+}
 
-	function clickme(){
-
-		alert('Hey, you clicked me!');
-	};
-
-	document.querySelector("table").addEventListener("click", clickme)
-};
+// Wait for the document to fully load before initializing
+document.addEventListener('DOMContentLoaded', initialize);
